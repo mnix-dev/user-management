@@ -1,6 +1,6 @@
-const Model = require('./../models/users')
 const catchAsync = require('../utils/catchAsync')
-const User = require('./../models/users')
+const Model = require('./../models/users')
+const auth = require('./../middleware/auth')
 
 module.exports.renderRegister = (req, res) => {
     // res.render('users/register');
@@ -71,6 +71,8 @@ module.exports.login = catchAsync(async (req, res) => {
     
 })
 
-module.exports.logout = catchAsync(async (req, res) => {
+module.exports.logout = catchAsync( async (req, res, next) => {
+    console.log(req.user)
 
+    next()
 })
