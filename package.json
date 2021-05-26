@@ -2,9 +2,9 @@
   "name": "first-project",
   "version": "0.0.2",
   "description": "This is my first node.js project without having my hand held through a tutorial. What it will do is yet to be determined. For now we are simply creating an empty node server.",
-  "main": "app.js",
+  "main": "./src/server.js",
   "scripts": {
-    "dev": "nodemon app"
+    "dev": "nodemon ./src/server"
   },
   "keywords": [
     "node"
@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.12.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
