@@ -1,0 +1,17 @@
+{
+  "name": "first-project",
+  "version": "0.0.1",
+  "description": "This is my first node.js project without having my hand held through a tutorial. What it will do is yet to be determined. For now we are simply creating an empty node server.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Mikey Nichols",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
