@@ -1,29 +1,38 @@
-const User = require('./../models/users')
+const Model = require('./../models/users')
 const catchAsync = require('../utils/catchAsync')
 
+module.exports.renderRegister = (req, res) => {
+    // res.render('users/register');
+}
+
+module.exports.renderLogin = (req, res) => {
+    // res.render('users/login');
+}
+
 exports.create = catchAsync(async (req, res, next) => {
-    const user = await User.create({
+    const instance = await Model.create({
       username: req.body.username,
       pin: req.body.pin,
     });
-    await user.save()
-    res.status(200).json({ status: 'Success!', message: `User with name of ${user.username} was created successfully.`})
+    await instance.save()
+    res.status(200).json({ status: 'Success!', message: `User with name of ${instance.username} was created successfully.`})
     next()
 })
 
-exports.readAll = (req, res, next) => {
+exports.readAll = catchAsync(async (req, res, next) => {
+    const index = await Model.find({})
     res.status(200).json
-    ({ status: `Retrieve all data from users database`, 
-    results: ['users from a database'.split(' ')] })
+    ({ status: 'Success!', message: index})
     next()
-}
+})
 
-exports.read = (req, res, next) => {
+exports.read = catchAsync(async (req, res, next) => {
+    const obj = await Model.findById(req.params.id);
     res.status(200).json
     ({ status: 'success', 
-    results: `Fetch user with the id of /${req.params.id}` })
+    results: obj })
     next()
-}
+})
 
 exports.update = (req, res, next) => {
     res.status(200).json
@@ -39,3 +48,12 @@ exports.delete = (req, res, next) => {
     next()
 }
 
+
+
+module.exports.login = (req, res) => {
+
+}
+
+module.exports.logout = (req, res) => {
+
+}
