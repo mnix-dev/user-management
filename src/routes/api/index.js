@@ -1,9 +1,9 @@
 const express = require('express')
 const router = new express.Router()
 const users = require('./users')
-const responses = require('./responses')
+const punch = require('./punch')
 
 router.use('/users', users)
-router.use('/responses', responses)
+router.use('/punch', punch)
 
 module.exports = router;

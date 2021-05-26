@@ -1,9 +1,15 @@
-exports.create = (req, res, next) => {
-    res.status(200).json
-    ({ status: 'success', 
-    results: `Create a new user with the id of ${req.params.id}` })
+const User = require('./../models/users')
+const catchAsync = require('../utils/catchAsync')
+
+exports.create = catchAsync(async (req, res, next) => {
+    const user = await User.create({
+      username: req.body.username,
+      pin: req.body.pin,
+    });
+    await user.save()
+    res.status(200).json({ status: 'Success!', message: `User with name of ${user.username} was created successfully.`})
     next()
-}
+})
 
 exports.readAll = (req, res, next) => {
     res.status(200).json
