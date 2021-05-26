@@ -1,5 +1,6 @@
 const Model = require('./../models/users')
 const catchAsync = require('../utils/catchAsync')
+const User = require('./../models/users')
 
 module.exports.renderRegister = (req, res) => {
     // res.render('users/register');
@@ -34,26 +35,42 @@ exports.read = catchAsync(async (req, res, next) => {
     next()
 })
 
-exports.update = (req, res, next) => {
+exports.update = catchAsync(async (req, res, next) => {
+    const obj = await Model.findByIdAndUpdate(req.params.id, req.body, {
+        new: true, runValidators: true
+    })
+    if (!obj) 
+        return next(new Error('404 error'))
+
+    res.status(200).json({ status: 'success', data: obj })
+})
+
+exports.delete = catchAsync(async (req, res, next) => {
+    const obj = await Model.findByIdAndDelete(req.params.id)
+    if (!obj)
+        return next(new Error('Error 404 no document found'))
     res.status(200).json
-    ({ status: 'success', 
-    results: `Edit the user with the id of ${req.params.id}` })
+    ({ status: `successfully removed one user with username of ${obj.username}` })
     next()
-}
+})
 
-exports.delete = (req, res, next) => {
-    res.status(200).json
-    ({ status: 'success', 
-    results: `Delete a new user with the id of ${req.params.id}` })
-    next()
-}
+exports.destroy = catchAsync(async (req, res, next) => {
+    const obj = await Model.deleteMany({})
+    if (!obj)
+        return next(new Error('No documents found!'))
+    res.status(200).json({ status: 'successfully deleted all users.'})
+})
 
 
 
-module.exports.login = (req, res) => {
+module.exports.login = catchAsync(async (req, res) => {
+    const { username, pin } = req.body
+    const user = await Model.findByCredentials(username, pin)
+    const token = user.generateAuthToken()
+    res.send({ user, token })
+    
+})
 
-}
+module.exports.logout = catchAsync(async (req, res) => {
 
-module.exports.logout = (req, res) => {
-
-}
+})
