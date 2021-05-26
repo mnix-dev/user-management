@@ -1,7 +1,12 @@
 const express = require('express')
+const { route } = require('../../app')
 const router = new express.Router()
+const controller = require('../../controls/users')
 
-router.get('/', (req, res) => console.log('return all users'))
-router.get('/:id', (req, res) => console.log(`show user with id ${req.params.id}`))
+router.get('/', controller.readAll)
+router.get('/:id', controller.read)
+router.post('/:id', controller.create)
+router.patch('/:id', controller.update)
+router.delete('/:id', controller.delete)
 
 module.exports = router;
