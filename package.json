@@ -1,6 +1,6 @@
 {
   "name": "first-project",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is my first node.js project without having my hand held through a tutorial. What it will do is yet to be determined. For now we are simply creating an empty node server.",
   "main": "app.js",
   "scripts": {
