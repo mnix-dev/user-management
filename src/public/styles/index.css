@@ -1,0 +1,15 @@
+.flex {
+    display: flex;
+}
+.flex.col {
+    flex-direction: column;
+}
+.m-auto {
+    margin: auto
+}
+.even {
+    justify-content: space-evenly;
+}
+.mr-5 {
+    margin-right: 3rem;
+}

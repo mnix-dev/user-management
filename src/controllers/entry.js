@@ -32,7 +32,6 @@ module.exports.clockOut = async (req, res) => {
     console.log(req.body)
     const id = req.params.id
     const entry = await Entry.findById(id)
-    //if (entry.out) this.index(null, res)
     entry.out = new Date().getTime()
     await entry.save()
     req.flash('success', 'successfully clocked out')

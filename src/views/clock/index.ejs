@@ -20,15 +20,12 @@
                              Last edit by <%= note.lastEditBy %> at <%= new Date(note.lastEdit).toString().slice(16,-33) %>
                              on <%= new Date(note.lastEdit).toString().slice(0,-42) %>
                         </span>
-                        <% } %>        
+                        <% } %>
+                        <br />
+                        <p><%= note.message %></p>        
                          <button class="render">Edit</button>
                     </div>
                 </form>
-                <% if (note.archive === 'true') { %>
-                <form method="POST" action="/notes/<%- note._id %>/restore/">
-                    <button>Restore</button>
-                </form>
-                <% } %>
                 <% if (type === 'done' && note.archive !== 'true') { %>
                 <form method="POST" action="/notes/<%- note._id %>/archive/">
                     <button>Archive</button>
@@ -47,6 +44,7 @@
                         <button>Delete</button>
                     </form>
                 <% } %>
+                
             </li>
         <% } %>
     </ul>
@@ -86,79 +84,38 @@
     <button>Clock In</button>
 </form>
 <% } %>  
-<div>
+<div class='flex m-5'>
 <% for (let entry of entries){ %>
-    <h2><%= new Date(entry.out).toString().slice(0,-42) %></h2>
-    <div>Clocked In At
-        <%= new Date(entry.in).toString().slice(16,-33) %>
-    </div> 
-    <div>Clocked Out At
-        <%= new Date(entry.out).toString().slice(16,-33) %>
-    </div>
-    <% if (entry.out) { %>
-        <form method="POST" action="/clock/delete/<%= entry._id %>">
-            <button>Delete</button>
-        </form>
-    <% } else if (!entry.out) { %>
-        <form method="POST" action="/clock/out/<%= entry._id %>">
-            <button>Clock Out</button>
-        </form>
-        <form action="/notes/<%= entry._id %>" method="POST">
-            <h3>Create Note</h3>
-            <ul>
-                <li><%- include('../partials/create-note') %></li>
-            </ul>
-        </form>
-    <% } %>        
+    <div>
+        <h2><%= entry.out? new Date(entry.out).toString().slice(0,-42) : new Date(entry.in).toString().slice(0,-42) %></h2>
+        <p>Clocked In At
+            <%= new Date(entry.in).toString().slice(16,-33) %></p>
+    
+        <p>Clocked Out At
+            <%= new Date(entry.out).toString().slice(16,-33) %></p>
+        
+        <% if (entry.out) { %>
+            <form method="POST" action="/clock/delete/<%= entry._id %>">
+                <button>Delete</button>
+            </form>
+        <% } else if (!entry.out) { %>
+            <form method="POST" action="/clock/out/<%= entry._id %>">
+                <button>Clock Out</button>
+            </form>
+        <% } %>  
+    </div>  
 <% } %>
 </div>
-<%- renderNotes(notes, 'note', 'My') %>
-<%- renderNotes(notes, 'todo', 'My', 'List') %>
-<%- renderNotes(notes, 'done', 'My') %>
-<%- renderNotes(globalNotes, 'note', 'Global') %>
-<%- renderNotes(globalNotes, 'todo', 'Global', 'List') %>
-<%- renderNotes(globalNotes, 'done', 'Global') %>
+<form action="/notes/<%= entry._id %>" method="POST">
+    <h3>Create Note</h3>
+    <ul>
+        <li><%- include('../partials/create-note') %></li>
+    </ul>
+</form>  
+
+<%- renderNotes(globalNotes, 'note', 'Everyones') %>
+<%- renderNotes(globalNotes, 'todo', 'Everyones', 'List') %>
+<%- renderNotes(globalNotes, 'done', 'Everyones') %>
 <%- renderArchive(myArchive, 'My') %>
 <%- renderArchive(archive, 'The') %>
-<script>
-const renderEdit = type => {
-    if (type !== 'done') {
-        document.querySelectorAll(`#${type} button.render`)
-        .forEach(button => button.addEventListener('click', e => {
-            e.preventDefault()
-            const id = `#${e.path[1].id}`
-            const div = document.querySelector(id)
-            const title = div.children[0].innerText
-            const newDiv = `
-            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-            <select name="type">
-                <option value="note" ${type === 'note' ? 'selected' : ''}>Note</option>
-                <option value="todo" ${type === 'todo' ? 'selected' : ''}>To Do</option>
-                <option value="done" ${type === 'done' ? 'selected' : ''}>Done</option>
-            </select>
-            <button>Submit</button>
-            `
-            div.innerHTML = newDiv
-        }))
-    }
-    else if (type === 'done'){
-        document.querySelectorAll('#done button.render')
-        .forEach(button => button.addEventListener('click', e => {
-            e.preventDefault()
-            const id = `#${e.path[1].id}`
-            const div = document.querySelector(id)
-            const title = div.children[0].innerText
-            const type = div.children[1].innerText
-            const newDiv = `
-            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-            <button>Submit</button>
-            `
-            div.innerHTML = newDiv
-        }))
-    }
-}
-renderEdit('done')
-renderEdit('note')
-renderEdit('todo')
-
-</script>
+<script src="/scripts/renderEdit.js"></script>

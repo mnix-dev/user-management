@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
     lastEditBy: String,
     archive: String,
     archiveAt: Number,
+    message: String,
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

@@ -35,6 +35,9 @@
                         <button>Make To Do</button>
                     </form>
                     <% } %>
+                    <br />
+                    <p><%= note.message %></p>
+                    
         </li>
         <% } %>
     </ul>
@@ -60,44 +63,4 @@
        <button>Clock Out</button>
     </form>
 </div>
-
-<script>
-const renderEdit = type => {
-    if (type !== 'done') {
-        document.querySelectorAll(`#${type} button.render`)
-        .forEach(button => button.addEventListener('click', e => {
-            e.preventDefault()
-            const id = `#${e.path[1].id}`
-            const div = document.querySelector(id)
-            const title = div.children[0].innerText
-            const newDiv = `
-            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-            <select name="type">
-                <option value="note" ${type === 'note' ? 'selected' : ''}>Note</option>
-                <option value="todo" ${type === 'todo' ? 'selected' : ''}>To Do</option>
-                <option value="done" ${type === 'done' ? 'selected' : ''}>Done</option>
-            </select>
-            <button>Submit</button>
-            `
-            div.innerHTML = newDiv
-        }))
-    }
-    else if (type === 'done'){
-        document.querySelectorAll('#done button.render')
-        .forEach(button => button.addEventListener('click', e => {
-            e.preventDefault()
-            const id = `#${e.path[1].id}`
-            const div = document.querySelector(id)
-            const title = div.children[0].innerText  
-            const newDiv = `
-            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-            <button>Submit</button>
-            `
-            div.innerHTML = newDiv
-        }))
-    }
-}
-renderEdit('done')
-renderEdit('note')
-renderEdit('todo')
-</script>
+<script src="/scripts/renderEdit.js"></script>
