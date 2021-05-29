@@ -1,0 +1,17 @@
+<% if(success && success.length) {%>
+<div>
+    <%= success %>
+    <button >
+        <span>&times;</span>
+    </button>
+</div>
+<% } %>
+
+<% if(error && error.length) {%>
+<div>
+    <%= error %>
+    <button>
+        <span>&times;</span>
+    </button>
+</div>
+<% } %>

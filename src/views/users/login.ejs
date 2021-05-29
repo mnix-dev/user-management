@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate')%>
+<div>
+    <h5>Login</h5>
+    <form action="/login" method="POST">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <%- include('../partials/form-feedback')%>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <%- include('../partials/form-feedback')%>
+        </div>
+        <button>Login</button>
+    </form>
+</div>

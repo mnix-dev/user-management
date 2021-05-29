@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punch Clock</title>
+</head>
+<body>
+    <header>
+        <h3>Punch Clock</h3>
+        <nav>
+            <% if(!currentUser) { %>
+            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/register">Register</a>
+            <% } else { %>
+            <a class="nav-link" href="/logout">Logout</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <h1>Punch Clock</h1>
+        <p class="lead"> This is a simple application that keeps track of time intervals.</p>
+        <a href="/clock">To App</a>
+    </main>
+    <footer class="mt-auto text-white-50">
+        <p>&copy; <%= new Date().getFullYear() %> mNiX</p>
+    </footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+<li>
+    <form id="edit" action="/notes/<%= note._id %>/edit/" method="POST">
+        <div id='n<%= note._id %>''>
+            <span class="note-title"><%= note.title %></span>
+             | 
+            <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>           
+        <button class="render">Edit</button>
+        </div>
+    </form>
+    <form action="/notes/<%- note._id %>/delete/">
+        <button>Delete</button>
+    </form>
+</li>

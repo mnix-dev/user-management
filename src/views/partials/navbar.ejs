@@ -1,0 +1,10 @@
+<nav>  
+    <div>
+        <% if(!currentUser) {%>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <% } else {%>
+        <a href="/logout">Logout</a>
+        <% } %>
+    </div>
+</nav>

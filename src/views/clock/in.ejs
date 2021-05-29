@@ -1,0 +1,179 @@
+<% layout('layouts/boilerplate')%>
+<div>
+    <h1>Hello <%= currentUser.username %>,</h1>
+    <h3>Clocked In As Of <%= new Date(entry.in).toString().slice(0,-33) %></h3>
+</div>
+<div>
+    <h3>Finished Tasks</h3>
+    <ul>
+        <% for (note of entry.notes) { %>
+        <% if (note.type === 'done') { %>
+        <li>
+            <form id="done" action="/notes/<%= note._id %>/edit/<%= entry._id %>" method="POST">
+                
+                <div id='n<%= note._id %>''>
+                    
+                    <span class="note-title"><%= note.title %></span>
+                     | 
+                    <span class="note-type">
+                        Done
+                    </span>
+                     | 
+                    <span class="note-edited"><%= note.lastEdit ? `Completed at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
+                           
+                <button class="render">Edit</button>
+                </form>
+                    <form action="/notes/<%- note._id %>/delete/<%- entry._id %>">
+                        <button>Delete</button>
+                    </form>
+                    <form action="/notes/<%- note._id %>/archive/<%- entry._id %>">
+                        <button>Archive</button>
+                    </form>
+                <% } %>
+        </li>
+        <% } %>
+    </ul>
+    <h3>To Do</h3>
+    <ul>
+        <% for (note of entry.notes) { %>
+        <% if (note.type === 'todo') { %>
+        <li>
+            <form id="todo" action="/notes/<%= note._id %>/edit/<%= entry._id %>" method="POST">
+                
+                <div id='n<%= note._id %>''>
+                    
+                    <span class="note-title"><%= note.title %></span>
+                     | 
+                    <span class="note-type">
+                        <% if(note.type === 'todo') { %>
+                            To Do    
+                       <% } else if (note.type === 'note') { %>
+                            Note 
+                       <% } %>
+                    </span>
+                     | 
+                    <span class="note-edited"><%= note.lastEdit ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
+                           
+                <button class="render">Edit</button>
+                </form>
+
+                    <form action="/notes/<%= note._id %>/complete/<%- entry._id %>">
+                        <button>Flag Done</button>
+                    </form>
+                    <form action="/notes/<%- note._id %>/delete/<%- entry._id %>">
+                        <button>Delete</button>
+                    </form>
+                <% } %>
+        </li>
+        <% } %>
+    </ul>
+    <h3>Notes</h3>
+    <ul>
+        <% for (note of entry.notes) { %>
+        <% if (note.type === 'note') { %>
+        <li>
+            <form id="note" action="/notes/<%= note._id %>/edit/<%= entry._id %>" method="POST">
+                
+                <div id='n<%= note._id %>''>
+                    
+                    <span class="note-title"><%= note.title %></span>
+                     | 
+                    <span class="note-type">
+                        <% if (note.type === 'done') { %>
+                            Done
+                        <% } else if(note.type === 'todo') { %>
+                            To Do    
+                       <% } else if (note.type === 'note') { %>
+                            Note 
+                       <% } %>
+                    </span>
+                     | 
+                    <span class="note-edited"><%= note.lastEdit ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
+                           
+                <button class="render">Edit</button>
+                </form>
+                <% if (note.type !== 'note') { %>
+                    <form action="/notes/<%= note._id %>/complete/<%- entry._id %>">
+                        <button>Flag Done</button>
+                    <% } else if (note.type === 'note') { %>
+                    <form action="/notes/<%= note._id %>/flag/<%- entry._id %>">
+                        <button>Make To Do</button>
+                    </form>
+                    <% } %>
+                    <form action="/notes/<%- note._id %>/delete/<%- entry._id %>">
+                        <button>Delete</button>
+                    </form>
+                <% } %>
+        </li>
+        <% } %>
+    </ul>
+    <form action="/notes/<%= entry._id %>" method="POST">
+        <h3>Create Note</h3>
+        <ul>
+            <li><%- include('../partials/create-note') %></li>
+        </ul>
+    
+    </form>
+</div>
+<div>
+    <form action="/clock/out/<%= entry._id %>">
+       <button>Clock Out</button>
+    </form>
+</div>
+
+<script>
+    document.querySelectorAll('#done button.render')
+    .forEach(button => button.addEventListener('click', e => {
+        e.preventDefault()
+        const id = `#${e.path[1].id}`
+        const div = document.querySelector(id)
+        const title = div.children[0].innerText
+        const type = div.children[1].innerText
+        const newDiv = `
+        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
+        <button>Submit</button>
+        `
+        div.innerHTML = newDiv
+    }))
+    document.querySelectorAll('#todo button.render')
+    .forEach(button => button.addEventListener('click', e => {
+        e.preventDefault()
+        const id = `#${e.path[1].id}`
+        const div = document.querySelector(id)
+        const title = div.children[0].innerText
+        const type = div.children[1].innerText
+        console.log(type)
+        const newDiv = `
+        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
+        <select name="type">
+            <option value="note" ${type === 'Note' ? 'selected' : ''}>Note</option>
+            <option value="todo" ${type === 'To Do' ? 'selected' : ''}>To Do</option>
+            <option value="done" ${type === 'Done' ? 'selected' : ''}>Done</option>
+        </select>
+        <button>Submit</button>
+        `
+        div.innerHTML = newDiv
+    }))
+    document.querySelectorAll('#note button.render')
+    .forEach(button => button.addEventListener('click', e => {
+        e.preventDefault()
+        const id = `#${e.path[1].id}`
+        const div = document.querySelector(id)
+        const title = div.children[0].innerText
+        const type = div.children[1].innerText
+        console.log(type)
+        const newDiv = `
+        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
+        <select name="type">
+            <option value="note" ${type === 'Note' ? 'selected' : ''}>Note</option>
+            <option value="todo" ${type === 'To Do' ? 'selected' : ''}>To Do</option>
+            <option value="done" ${type === 'Done' ? 'selected' : ''}>Done</option>
+        </select>
+        <button>Submit</button>
+        `
+        div.innerHTML = newDiv
+    }))
+    document.querySelectorAll('#note button.flag').forEach(button => button.addEventListener('click', e => {
+        
+    }))
+</script>

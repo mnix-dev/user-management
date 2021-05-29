@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate')%>
+<div>
+    <h5>Register</h5>
+    <form action="/register" method="POST">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus>
+            <%- include('../partials/form-feedback')%>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <%- include('../partials/form-feedback')%>
+        </div>
+        <button>Register</button>
+    </form>
+</div>
