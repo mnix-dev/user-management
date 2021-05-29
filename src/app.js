@@ -16,7 +16,6 @@ const User = require('./models/user')
 const users = require('./routes/users')
 const clock = require('./routes/clock')
 const notes = require('./routes/notes')
-const remove = require('./routes/delete')
 
 const MongoDBStore = require('connect-mongo')(session)
 
@@ -84,7 +83,6 @@ app.use((req, res, next) => {
 
 
 app.use('/', users )
-app.use('/delete', remove)
 app.use('/clock', clock)
 app.use('/notes', notes)
 

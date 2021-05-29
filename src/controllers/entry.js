@@ -3,10 +3,14 @@ const Note = require('./../models/note')
 
 module.exports.index = async (req, res) => {
     const entries = await Entry.find({author: req.user})
+    let entry = await Entry.find({author: req.user, out: undefined})
+    if (entry == undefined) entry = 'defined'
     const notes = await Note.find({author: req.user, archive: !true})
     const globalNotes = await Note.find({archive: false})
+    const myArchive = await Note.find({archive: true, author: req.user})
+    const archive = await Note.find({archive: true})
     if (!entries) console.error('no entries found')
-    res.render('clock/index', { entries, notes, globalNotes })
+    res.render('clock/index', { entry, entries, notes, globalNotes, myArchive, archive })
 } 
 
 module.exports.clockIn = async (req, res) => {
@@ -25,9 +29,10 @@ module.exports.read = async (req, res) => {
 }
 
 module.exports.clockOut = async (req, res) => {
+    console.log(req.body)
     const id = req.params.id
     const entry = await Entry.findById(id)
-    if (entry.out) this.index(null, res)
+    //if (entry.out) this.index(null, res)
     entry.out = new Date().getTime()
     await entry.save()
     req.flash('success', 'successfully clocked out')
@@ -38,5 +43,5 @@ module.exports.delete = async (req, res) => {
     const { id } = req.params
     await Entry.findByIdAndDelete(id)
     req.flash('success', 'successfully deleted record')
-    res.redirect('/clock')
+    res.redirect('/clock/')
 }

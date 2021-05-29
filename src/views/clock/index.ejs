@@ -1,211 +1,164 @@
 <% layout('layouts/boilerplate')%>
-<% let clockedIn %>
-<h1>Hello <%= currentUser.username %>, </h1>
-<% for (let entry of entries) { %>
-    
-    <% if (!entry.out) { %>
-        <% clockedIn = true %>
-        <form action="/notes/<%= entry._id %>" method="POST">
-        <%- include('../partials/create-note') %>
-         </form>
-        <form method="POST" action="/clock/out/<%= entry._id %>">
-            <button>Clock Out</button>
-        </form>
-<% } } %>
-    <% if (!clockedIn) { %>
-    <form method="POST" action="/clock/in">
-        <button>Clock In</button>
-    </form>
+
+<% const renderNotes = (notes, type, prefix, suffix) => { %>
+    <% const renderType = `${prefix ? prefix : ''} ${type === 'done' ? 'Finished Tasks' : type === 'todo' ? 'To Do' : type === 'note' ? 'Notes' : '' } ${ suffix ? suffix : ''}` %>
+    <h3><%= renderType %></h3>
+    <ul>
+        <% for (let note of notes.filter(note => note.type === type)) { %>
+            <li>
+                <form id="<%= note.type %>" action="/notes/<%= note._id %>/edit/" method="POST">
+                    <div id='g<%= note._id + Math.floor(Math.random() * 100) %>'>
+                        <span><%= note.title %></span>
+                         | 
+                        <span>
+                            Created by <%= note.createdBy %> at <%= new Date(note.createdAt).toString().slice(16,-33) %>
+                            on <%= new Date(note.createdAt).toString().slice(0,-42) %>
+                        </span>
+                        <% if (note.lastEdit > note.createdAt) { %>
+                         |
+                         <span>
+                             Last edit by <%= note.lastEditBy %> at <%= new Date(note.lastEdit).toString().slice(16,-33) %>
+                             on <%= new Date(note.lastEdit).toString().slice(0,-42) %>
+                        </span>
+                        <% } %>        
+                         <button class="render">Edit</button>
+                    </div>
+                </form>
+                <% if (note.archive === 'true') { %>
+                <form method="POST" action="/notes/<%- note._id %>/restore/">
+                    <button>Restore</button>
+                </form>
+                <% } %>
+                <% if (type === 'done' && note.archive !== 'true') { %>
+                <form method="POST" action="/notes/<%- note._id %>/archive/">
+                    <button>Archive</button>
+                </form>
+                <% } else if (type === 'todo') { %>
+                <form method="POST" action="/notes/<%= note._id %>/complete/">
+                    <button>Flag Done</button>
+                </form> 
+                <% } else if (type === 'note') { %>
+                <form method="POST" action="/notes/<%= note._id %>/flag/">
+                    <button>Make To Do</button>
+                </form>
+                <% } %>
+                <% if (currentUser.username == note.createdBy) { %>
+                    <form method="POST" action="/notes/<%- note._id %>/delete/">
+                        <button>Delete</button>
+                    </form>
+                <% } %>
+            </li>
+        <% } %>
+    </ul>
+<% } %>
+<% const renderArchive = (notes, prefix) => { %>
+<% const renType = `${prefix ? prefix : ''} Archive` %>
+<h3><%= renType %></h3>
+<ul>
+    <% for (let note of notes.filter(note => note.type === 'done')) { %>
+        <li>
+            <div id='a<%= note._id %>'>
+                <span class="note-title"><%= note.title %></span>
+                    | <% if (note.archiveAt > note.lastEdit) { %>
+                <span>
+                    Archived at <%= new Date(note.archiveAt).toString().slice(16,-33) %>
+                    on <%= new Date(note.archiveAt).toString().slice(0,-42) %>
+                </span>
+                    <% } %>      
+                <form method="POST" action="/notes/<%- note._id %>/restore/">
+                    <button>Restore</button>
+                </form>
+            <% if (currentUser.username == note.createdBy) { %>
+                <form method="POST" action="/notes/<%- note._id %>/delete/">
+                    <button>Delete</button>
+                </form>
+            <% } %>
+        </li>
     <% } %>
+</ul>
+<% } %>
+<h1>Hello <%= currentUser.username %>, </h1>
+<% let clockedIn %>
+<% for (let entry of entries) { %>
+<% if (!entry.out) clockedIn = true }%>
+<% if (!clockedIn) { %>
+<form method="POST" action="/clock/in">
+    <button>Clock In</button>
+</form>
+<% } %>  
 <div>
-    <% for (let entry of entries){%>
+<% for (let entry of entries){ %>
     <h2><%= new Date(entry.out).toString().slice(0,-42) %></h2>
     <div>Clocked In At
         <%= new Date(entry.in).toString().slice(16,-33) %>
     </div> 
     <div>Clocked Out At
-    <%= new Date(entry.out).toString().slice(16,-33) %>
+        <%= new Date(entry.out).toString().slice(16,-33) %>
     </div>
-    <form method="DELETE" action="/delete/<%= entry._id %>">
-        <button>Delete</button>
-    </form>         
-    <% }%>
+    <% if (entry.out) { %>
+        <form method="POST" action="/clock/delete/<%= entry._id %>">
+            <button>Delete</button>
+        </form>
+    <% } else if (!entry.out) { %>
+        <form method="POST" action="/clock/out/<%= entry._id %>">
+            <button>Clock Out</button>
+        </form>
+        <form action="/notes/<%= entry._id %>" method="POST">
+            <h3>Create Note</h3>
+            <ul>
+                <li><%- include('../partials/create-note') %></li>
+            </ul>
+        </form>
+    <% } %>        
+<% } %>
 </div>
-<h3>My Notes</h3>
-<ul>
-    <% for (let note of notes) {%>
-        <% if (note.type === 'note') { %>
-        <li>
-            <form id="edit" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='n<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>           
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-
-<h3>To Do List</h3>
-<ul>
-    <% for (let note of notes) {%>
-        <% if (note.type === 'todo') { %>
-        <li>
-            <form id="edit" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='n<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>           
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-
-<h3>My Finished Tasks</h3>
-<ul>
-    <% for (let note of notes) {%>
-        <% if (note.type === 'done') { %>
-        <li>
-            <form id="finished" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='n<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>           
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-
-<h3>Global To Do</h3>
-<ul>
-    <% for (let note of globalNotes) {%>
-        <% if (note.type === 'todo') { %>
-        <li>
-            <form id="edit" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='g<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
-                     |
-                    <span class="note-by">by <%= note.lastEdit > note.createdAt ? note.lastEditBy : note.createdBy %></span>
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-<h3>Global Notes</h3>
-<ul>
-    <% for (let note of globalNotes) {%>
-        <% if (note.type === 'note') { %>
-        <li>
-            <form id="edit" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='g<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
-                     |
-                    <span class="note-by"></span>
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-
-<h3>Global Finished Tasks</h3>
-<ul>
-    <% for (let note of globalNotes) {%>
-        <% if (note.type === 'done') { %>
-        <li>
-            <form id="gDone" action="/notes/<%= note._id %>/edit/" method="POST">
-                <div id='g<%= note._id %>''>
-                    <span class="note-title"><%= note.title %></span>
-                     | 
-                    <span class="note-edited"><%= note.lastEdit > note.createdAt ? `Last edited at ${ new Date(note.lastEdit).toString().slice(16,-33) }` : `Created at ${new Date(note.createdAt).toString().slice(16,-33) }` %></span>
-                     |
-                    <span class="note-by"></span>
-                <button class="render">Edit</button>
-                </div>
-            </form>
-            <form action="/notes/<%- note._id %>/delete/">
-                <button>Delete</button>
-            </form>
-        </li>
-        <% } }%>
-</ul>
-
+<%- renderNotes(notes, 'note', 'My') %>
+<%- renderNotes(notes, 'todo', 'My', 'List') %>
+<%- renderNotes(notes, 'done', 'My') %>
+<%- renderNotes(globalNotes, 'note', 'Global') %>
+<%- renderNotes(globalNotes, 'todo', 'Global', 'List') %>
+<%- renderNotes(globalNotes, 'done', 'Global') %>
+<%- renderArchive(myArchive, 'My') %>
+<%- renderArchive(archive, 'The') %>
 <script>
-    document.querySelectorAll('#gDone button.render')
-        .forEach(button => button
-        .addEventListener('click', (e) => {
-        e.preventDefault()
-        const id = `#${e.path[1].id}`
-        const div = document.querySelector(id)
-        const title = div.children[0].innerText
-        const type = div.children[1].innerText
-        const newDiv = `
-        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-        <select name="type" id="type">
-            <option value="todo" ${type === 'To Do' ? 'selected' : ''}>To Do</option>
-            <option value="note" ${type === 'Note' ? 'selected' : ''}>Note</option>
-        </select>
-        <button>Submit</button>
-        `
-        div.innerHTML = newDiv
-    }))
-    document.querySelectorAll('#finished button.render')
-    .forEach(button => button.addEventListener('click', (e) => {
-        e.preventDefault()
-        const id = `#${e.path[1].id}`
-        const div = document.querySelector(id)
-        const title = div.children[0].innerText
-        const newDiv = `
-        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-        <button>Submit</button>
-        `
-        div.innerHTML = newDiv
-    }))
-
-
-    document.querySelectorAll('#edit button.render')
-    .forEach(button => button.addEventListener('click', (e) => {
-        e.preventDefault()
-        const id = `#${e.path[1].id}`
-        const div = document.querySelector(id)
-        const title = div.children[0].innerText
-        const type = div.children[1].innerText
-        const newDiv = `
-        <input type="text" id="title" name="title" value="${title}"placeholder="edit">
-        <select name="type" id="type">
-            <option value="todo" ${type === 'To Do' ? 'selected' : ''}>To Do</option>
-            <option value="done" ${type === 'Done' ? 'selected' : ''}>Done</option>
-            <option value="note" ${type === 'Note' ? 'selected' : ''}>Note</option>
-        </select>
-        <button>Submit</button>
-        `
-        div.innerHTML = newDiv
-    }))
+const renderEdit = type => {
+    if (type !== 'done') {
+        document.querySelectorAll(`#${type} button.render`)
+        .forEach(button => button.addEventListener('click', e => {
+            e.preventDefault()
+            const id = `#${e.path[1].id}`
+            const div = document.querySelector(id)
+            const title = div.children[0].innerText
+            const newDiv = `
+            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
+            <select name="type">
+                <option value="note" ${type === 'note' ? 'selected' : ''}>Note</option>
+                <option value="todo" ${type === 'todo' ? 'selected' : ''}>To Do</option>
+                <option value="done" ${type === 'done' ? 'selected' : ''}>Done</option>
+            </select>
+            <button>Submit</button>
+            `
+            div.innerHTML = newDiv
+        }))
+    }
+    else if (type === 'done'){
+        document.querySelectorAll('#done button.render')
+        .forEach(button => button.addEventListener('click', e => {
+            e.preventDefault()
+            const id = `#${e.path[1].id}`
+            const div = document.querySelector(id)
+            const title = div.children[0].innerText
+            const type = div.children[1].innerText
+            const newDiv = `
+            <input type="text" id="title" name="title" value="${title}"placeholder="edit">
+            <button>Submit</button>
+            `
+            div.innerHTML = newDiv
+        }))
+    }
+}
+renderEdit('done')
+renderEdit('note')
+renderEdit('todo')
 
 </script>

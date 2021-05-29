@@ -7,6 +7,7 @@ const schema = new mongoose.Schema({
     lastEdit: Number,
     lastEditBy: String,
     archive: String,
+    archiveAt: Number,
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

@@ -3,8 +3,14 @@
         <% if(!currentUser) {%>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
-        <% } else {%>
-        <a href="/logout">Logout</a>
-        <% } %>
     </div>
+        <% } else { %>
+            <% if (entry && entry.length > 0 ) { %>
+            <div>
+                <a href="/clock/<%= entry[0]._id %>">Today's Entry</a>
+            </div>
+            <% } %>
+        <a href="/logout">Logout</a>
+    </div>
+        <% } %>
 </nav>
