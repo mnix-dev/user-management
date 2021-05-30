@@ -1,15 +1,35 @@
-.flex {
-    display: flex;
+ul {
+    list-style: none;
 }
-.flex.col {
-    flex-direction: column;
+li {
+    max-width: 25em;
 }
-.m-auto {
-    margin: auto
+:root {
+    font-size: 62.5%;
+    font-family: sans-serif;
 }
-.even {
-    justify-content: space-evenly;
+form {
+    display: inline-block;
 }
-.mr-5 {
-    margin-right: 3rem;
+button {
+    display: grid;
+    float: right;
+}
+h1 {
+    font-size: 3em;
+}
+h2 {
+    font-size: 2em;
+}
+h3 {
+    font-size: 1.5em;
+}
+p {
+    display: inline-block;
+}
+textarea {
+    min-height: 5rem;
+    max-height: 17.5em;
+    min-width: 17.5em;
+    max-width: 17.5em;
 }

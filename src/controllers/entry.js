@@ -4,7 +4,6 @@ const Note = require('./../models/note')
 module.exports.index = async (req, res) => {
     const entries = await Entry.find({author: req.user})
     let entry = await Entry.find({author: req.user, out: undefined})
-    if (entry == undefined) entry = 'defined'
     const notes = await Note.find({author: req.user, archive: !true})
     const globalNotes = await Note.find({archive: false})
     const myArchive = await Note.find({archive: true, author: req.user})
@@ -16,7 +15,8 @@ module.exports.index = async (req, res) => {
 module.exports.clockIn = async (req, res) => {
     const entry = new Entry();
         entry.author = req.user._id
-        entry.in = new Date().getTime();
+        entry.in = new Date().getTime()
+        console.log(entry)
     await entry.save();
     req.flash('success', 'successfully clocked in')
     res.redirect(`/clock/${entry._id}`)

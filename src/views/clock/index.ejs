@@ -1,5 +1,4 @@
 <% layout('layouts/boilerplate')%>
-
 <% const renderNotes = (notes, type, prefix, suffix) => { %>
     <% const renderType = `${prefix ? prefix : ''} ${type === 'done' ? 'Finished Tasks' : type === 'todo' ? 'To Do' : type === 'note' ? 'Notes' : '' } ${ suffix ? suffix : ''}` %>
     <h3><%= renderType %></h3>
@@ -8,8 +7,10 @@
             <li>
                 <form id="<%= note.type %>" action="/notes/<%= note._id %>/edit/" method="POST">
                     <div id='g<%= note._id + Math.floor(Math.random() * 100) %>'>
-                        <span><%= note.title %></span>
-                         | 
+                        <h4><%= note.title %></h4>
+                        <% if (note.message) { %>
+                        <p><%= note.message %></p>
+                        <% } %>
                         <span>
                             Created by <%= note.createdBy %> at <%= new Date(note.createdAt).toString().slice(16,-33) %>
                             on <%= new Date(note.createdAt).toString().slice(0,-42) %>
@@ -20,9 +21,7 @@
                              Last edit by <%= note.lastEditBy %> at <%= new Date(note.lastEdit).toString().slice(16,-33) %>
                              on <%= new Date(note.lastEdit).toString().slice(0,-42) %>
                         </span>
-                        <% } %>
-                        <br />
-                        <p><%= note.message %></p>        
+                        <% } %>        
                          <button class="render">Edit</button>
                     </div>
                 </form>
@@ -56,8 +55,8 @@
     <% for (let note of notes.filter(note => note.type === 'done')) { %>
         <li>
             <div id='a<%= note._id %>'>
-                <span class="note-title"><%= note.title %></span>
-                    | <% if (note.archiveAt > note.lastEdit) { %>
+                <h4 class="note-title"><%= note.title %></h4>
+                    <% if (note.archiveAt > note.lastEdit) { %>
                 <span>
                     Archived at <%= new Date(note.archiveAt).toString().slice(16,-33) %>
                     on <%= new Date(note.archiveAt).toString().slice(0,-42) %>
@@ -76,15 +75,15 @@
 </ul>
 <% } %>
 <h1>Hello <%= currentUser.username %>, </h1>
-<% let clockedIn %>
+<% let clockedIn, eId %>
 <% for (let entry of entries) { %>
-<% if (!entry.out) clockedIn = true }%>
+<% if (!entry.out) clockedIn = true, eId = entry._id }%>
 <% if (!clockedIn) { %>
 <form method="POST" action="/clock/in">
     <button>Clock In</button>
 </form>
 <% } %>  
-<div class='flex m-5'>
+<div>
 <% for (let entry of entries){ %>
     <div>
         <h2><%= entry.out? new Date(entry.out).toString().slice(0,-42) : new Date(entry.in).toString().slice(0,-42) %></h2>
@@ -104,14 +103,15 @@
             </form>
         <% } %>  
     </div>  
-<% } %>
 </div>
-<form action="/notes/<%= entry._id %>" method="POST">
+<% } %>
+<form action="/notes/<%= eId %>" method="POST">
     <h3>Create Note</h3>
     <ul>
         <li><%- include('../partials/create-note') %></li>
     </ul>
-</form>  
+</form> 
+
 
 <%- renderNotes(globalNotes, 'note', 'Everyones') %>
 <%- renderNotes(globalNotes, 'todo', 'Everyones', 'List') %>
