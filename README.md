@@ -1,4 +1,4 @@
-# Welcome to /user-management/ <an open source project />
+# Welcome to /user-management/ \<an open source project \/\>
 
 At the current state this program provides a user interface with the ability to register and login as a user to a database. The user can then create notes in a database. A note can be created with a type of  'note' or 'to do'. A 'note' can be turned into a 'to do' with a button and a 'to do' can be changed to 'done' with another button. Once a note is flagged as 'done' it can then be 'archived'. Any note that is not archived can be edited. An archived note can be restored with a button.
 
