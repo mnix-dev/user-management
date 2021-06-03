@@ -1,1 +1,1 @@
-Mikey Nichols | mnix.dev@gmail.com
+Mikey Nichols | mnichols08
