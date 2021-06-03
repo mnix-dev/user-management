@@ -4,7 +4,7 @@ At the current state this program provides a user interface with the ability to 
 
 ## Why is it called User Management?
 
-Where this project currently sits, it could go in a number of different directions. The next version of this program that I vision to implement of this program will introduce a user with the rights of a 'manager' that will be given an interface that shows all users, those that are clocked in, and another interface to create and assign notes/tasks to users.
+Where this project currently sits, it could go in a number of different directions. I envision that the next version will introduce a user with the rights of a 'manager' that will be given an interface that shows all users, those that are clocked in, and another interface to create and assign notes/tasks to users.
 
 #### Why should I contribute?
 I am learning by doing and I hope to inspire others to learning by doing as well. If you have never contributed to any project before then I personally invite you to contribute to your very first one. I am excited to see what comes of this.
@@ -16,7 +16,7 @@ The project is currently just a single repository. You can open issues and pull 
 #### How do I contribute?
 
 If you want to contribute please reach out to me on Discord at mNix#5589 
-I will provide further instructions from there.
+I will need to set your account up as a contributor for the project on GitHub
 
 ## How do I run the application?
 
