@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const entry = require('../controllers/entry')
+const controller = require('../controllers/clock')
 const notes = require('../controllers/note')
 const catchAsync = require('../utils/catchAsync')
 const { isLoggedIn } = require('../middleware');
 
 router.route('/')
-    .get(isLoggedIn, catchAsync(entry.index,notes.read))
-router.post('/delete/:id', isLoggedIn, entry.delete)
-router.post('/in', isLoggedIn, catchAsync(entry.clockIn))
-router.post('/out/:id', isLoggedIn, catchAsync(entry.clockOut))
+    .get(isLoggedIn, catchAsync(controller.index,notes.read))
+router.post('/delete/:id', isLoggedIn, controller.delete)
+router.post('/in', isLoggedIn, catchAsync(controller.clockIn))
+router.post('/out/:id', isLoggedIn, catchAsync(controller.clockOut))
 
-router.get('/:id', isLoggedIn,entry.read)
+router.get('/:id', isLoggedIn,controller.read)
 
 module.exports = router;

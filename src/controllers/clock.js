@@ -1,9 +1,9 @@
-const Entry = require('./../models/entry')
-const Note = require('./../models/note')
+const Clock = require('./../models/clock')
+const Note = require('../models/note')
 
 module.exports.index = async (req, res) => {
-    const entries = await Entry.find({author: req.user})
-    let entry = await Entry.find({author: req.user, out: undefined})
+    const entries = await Clock.find({author: req.user})
+    let entry = await Clock.find({author: req.user, out: undefined})
     const notes = await Note.find({author: req.user, archive: !true})
     const globalNotes = await Note.find({archive: false})
     const myArchive = await Note.find({archive: true, author: req.user})
@@ -13,7 +13,7 @@ module.exports.index = async (req, res) => {
 } 
 
 module.exports.clockIn = async (req, res) => {
-    const entry = new Entry();
+    const entry = new Clock();
         entry.author = req.user._id
         entry.in = new Date().getTime()
         console.log(entry)
@@ -23,7 +23,7 @@ module.exports.clockIn = async (req, res) => {
 } 
 
 module.exports.read = async (req, res) => {
-    const entry = await Entry.findById(req.params.id).populate({
+    const entry = await Clock.findById(req.params.id).populate({
         path: 'notes' }).populate({path: 'archive' })
     res.render('clock/in', { entry })
 }
@@ -31,7 +31,7 @@ module.exports.read = async (req, res) => {
 module.exports.clockOut = async (req, res) => {
     console.log(req.body)
     const id = req.params.id
-    const entry = await Entry.findById(id)
+    const entry = await Clock.findById(id)
     entry.out = new Date().getTime()
     await entry.save()
     req.flash('success', 'successfully clocked out')
@@ -40,7 +40,7 @@ module.exports.clockOut = async (req, res) => {
 
 module.exports.delete = async (req, res) => {
     const { id } = req.params
-    await Entry.findByIdAndDelete(id)
+    await Clock.findByIdAndDelete(id)
     req.flash('success', 'successfully deleted record')
     res.redirect('/clock/')
 }
