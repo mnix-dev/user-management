@@ -2,6 +2,13 @@
 
 At the current state this program provides a user interface with the ability to register and login as a user to a database. The user can then create notes in a database. A note can be created with a type of  'note' or 'to do'. A 'note' can be turned into a 'to do' with a button and a 'to do' can be changed to 'done' with another button. Once a note is flagged as 'done' it can then be 'archived'. Any note that is not archived can be edited. An archived note can be restored with a button.
 
+## Why is it called User Management?
+
+Where this project currently sits, it could go in a number of different directions. The next version of this program that I vision to implement of this program will introduce a user with the rights of a 'manager' that will be given an interface that shows all users, those that are clocked in, and another interface to create and assign notes/tasks to users.
+
+#### Why should I contribute?
+I am learning by doing and I hope to inspire others to learning by doing as well. If you have never contributed to any project before then I personally invite you to contribute to your very first one. I am excited to see what comes of this.
+
 ## Where to open issues
 
 The project is currently just a single repository. You can open issues and pull requests directly on this repository. I do ask that you create a branch with your GitHub username as the title before doing this.
