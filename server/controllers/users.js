@@ -31,6 +31,14 @@ module.exports.login = (req, res) => {
     res.redirect(redirectUrl);
 }
 
+module.exports.reactLogin = (req, res) => {
+    console.log(req.body.username)
+    res.status(201).json({
+        status: 'success',
+        data: { username: req.body.username, isAuthenticated: true }
+    })
+}
+
 module.exports.logout = (req, res) => {
     req.logout();
     req.flash('success', `Enjoy your time off, ${req.body.username}`);

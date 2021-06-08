@@ -6,7 +6,9 @@ const users = require('../controllers/users')
 
 router.route('/register')
     .get(users.renderRegister)
-    .post(catchAsync(users.register));
+    .post(catchAsync(users.register))
+
+router.post('/react-login', passport.authenticate('local', { session: false, failureFlash: false }), users.reactLogin)
 
 router.route('/login')
     .get(users.renderLogin)

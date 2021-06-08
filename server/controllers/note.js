@@ -1,5 +1,5 @@
-const Note = require('./../models/note')
-const Clock = require('./../models/clock')
+const Note = require('../models/note')
+const Clock = require('../models/clock')
 
 module.exports.create = async (req, res) => {
     const entry = await Clock.findById(req.params.entryId)

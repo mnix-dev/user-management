@@ -1,4 +1,4 @@
-const Clock = require('./../models/clock')
+const Clock = require('../models/clock')
 const Note = require('../models/note')
 
 module.exports.index = async (req, res) => {
