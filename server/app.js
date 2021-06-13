@@ -19,7 +19,7 @@ const notes = require('./routes/notes')
 
 const MongoDBStore = require('connect-mongo')(session)
 
-const DB_URI = process.env.DB_URI
+const DB_URI = process.env.DB_URL
 const secret = process.env.SECRET
 mongoose.connect(DB_URI, {
     useNewUrlParser: true,
@@ -40,7 +40,7 @@ app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.use(enforce.HTTPS({ trustProtoHeader: true}))
+// app.use(enforce.HTTPS({ trustProtoHeader: true}))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))

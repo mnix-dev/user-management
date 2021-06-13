@@ -8,10 +8,11 @@
     "npm": "7.13.0"
   },
   "scripts": {
-    "server": "node ./server",
+    "server": "nodemon ./server",
+    "start": "node ./server",
     "client": "cd client && npm start",
-    "build": "cd client && npm install && npm run build",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "build": "cd client && npm run build",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [
     "node",
@@ -22,7 +23,6 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
-    "concurrently": "^6.2.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^3.2.0",
     "dotenv": "^10.0.0",
@@ -38,6 +38,7 @@
     "passport-local-mongoose": "^6.1.0"
   },
   "devDependencies": {
+    "concurrently": "^6.2.0",
     "nodemon": "^2.0.7"
   }
 }
