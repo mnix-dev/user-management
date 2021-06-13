@@ -1,8 +1,8 @@
 const Note = require('./../models/note')
-const Entry = require('./../models/entry')
+const Clock = require('./../models/clock')
 
 module.exports.create = async (req, res) => {
-    const entry = await Entry.findById(req.params.entryId)
+    const entry = await Clock.findById(req.params.entryId)
     const note = new Note(req.body)
     note.archive = false
     note.author = req.user._id
@@ -38,7 +38,7 @@ module.exports.finish = async(req, res) => {
 
 module.exports.archive = async(req, res) => {
     const { id, noteId } = req.params
-    if (id) await Entry.findByIdAndUpdate(id, {$pull: { notes: noteId }})
+    if (id) await Clock.findByIdAndUpdate(id, {$pull: { notes: noteId }})
     const note = await Note.findById(noteId)
     note.archive = true
     note.archiveAt = new Date().getTime()
@@ -48,7 +48,7 @@ module.exports.archive = async(req, res) => {
 
 module.exports.restore = async(req, res) => {
     const { id, noteId } = req.params
-    if (id) await Entry.findByIdAndUpdate(id, {$push: { notes: noteId }})
+    if (id) await Clock.findByIdAndUpdate(id, {$push: { notes: noteId }})
     const note = await Note.findById(noteId)
     note.archive = false
     await note.save()
@@ -67,7 +67,7 @@ module.exports.flag = async(req, res) => {
 
 module.exports.delete = async(req, res) => {
     const { id, noteId } = req.params
-    if (id) await Entry.findByIdAndUpdate(id, {$pull: { notes: noteId }})
+    if (id) await Clock.findByIdAndUpdate(id, {$pull: { notes: noteId }})
     await Note.findByIdAndDelete(noteId)
     req.flash('success', 'successfully removed note')
     res.redirect(`/clock/${id ? id : ''}`)
