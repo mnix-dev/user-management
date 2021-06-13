@@ -10,6 +10,7 @@
   "scripts": {
     "server": "nodemon ./server",
     "client": "cd client && npm start",
+    "build": "cd clind && npm build",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [
@@ -28,6 +29,7 @@
     "express": "^4.17.1",
     "express-react-views": "^0.11.0",
     "express-session": "^1.17.2",
+    "express-sslify": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.11",
     "passport": "^0.4.1",
