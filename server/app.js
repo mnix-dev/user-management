@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
+const ejsMate = require('ejs-mate')
 const session = require('express-session')
 const flash = require('connect-flash')
 
@@ -18,10 +19,9 @@ const notes = require('./routes/notes')
 
 const MongoDBStore = require('connect-mongo')(session)
 
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/my-first-app'
-const secret = process.env.SECRET || 's3c$E7!'
-
-mongoose.connect(dbUrl, {
+const DB_URI = process.env.DB_URI
+const secret = process.env.SECRET
+mongoose.connect(DB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -36,12 +36,16 @@ db.once("open", () => {
 
 const app = express() 
 
+app.engine('ejs', ejsMate)
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
 const store = new MongoDBStore({
-    url: dbUrl,
+    url: DB_URI,
     secret,
     touchAfter: 24 * 60 * 60
 })

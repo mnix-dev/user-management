@@ -7,7 +7,8 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    email: String
 });
 
 schema.plugin(passportLocalMongoose);

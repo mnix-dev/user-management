@@ -77,3 +77,4 @@ module.exports.read = async(req, res) => {
     const notes = await Note.find({archive: false})
     res.send(notes)
 }
+

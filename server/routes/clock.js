@@ -5,6 +5,14 @@ const notes = require('../controllers/note')
 const catchAsync = require('../utils/catchAsync')
 const { isLoggedIn } = require('../middleware');
 
+router.route('/react')
+    .get(catchAsync(controller.reactIndex,notes.read))
+
+router.post('/react/in', catchAsync(controller.reactClockIn))
+router.post('/react/out/:id', catchAsync(controller.reactClockOut))
+
+router.post('/in', catchAsync(controller.clockIn))
+
 router.route('/')
     .get(isLoggedIn, catchAsync(controller.index,notes.read))
 router.post('/delete/:id', isLoggedIn, controller.delete)

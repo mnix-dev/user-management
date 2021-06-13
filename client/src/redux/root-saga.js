@@ -1,7 +1,8 @@
 import { all, call } from 'redux-saga/effects'
 
-// import { userSagas } from './user/sagas'
-// call(userSagas)
+import { userSagas } from './user/sagas'
+import { clockSagas } from './clock/sagas'
+
 export default function* rootSaga() {
-  yield all( )
+  yield all( [call(userSagas), call(clockSagas)])
 }

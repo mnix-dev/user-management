@@ -8,12 +8,17 @@ router.route('/register')
     .get(users.renderRegister)
     .post(catchAsync(users.register))
 
-router.post('/react-login', passport.authenticate('local', { session: false, failureFlash: false }), users.reactLogin)
+router.route('/react-register')
+    .post(catchAsync(users.reactRegister)) 
+
+router.route('/react-login')
+    .post(passport.authenticate('local', { session: false, failureFlash: false }), users.reactLogin) 
 
 router.route('/login')
     .get(users.renderLogin)
     .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), users.login)
 
 router.get('/logout', users.logout)
+router.get('/react-logout', users.reactLogout)
 
 module.exports = router;
