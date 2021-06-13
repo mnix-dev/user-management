@@ -10,7 +10,7 @@
   "scripts": {
     "server": "nodemon ./server",
     "client": "cd client && npm start",
-    "build": "cd client && npm build",
+    "build": "cd client && npm run build",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [
