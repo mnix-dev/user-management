@@ -2,8 +2,7 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config()
 }
 const express = require('express')
-const enforce = require('express-sslify')
-const path = require('path')
+
 const mongoose = require('mongoose')
 
 const session = require('express-session')

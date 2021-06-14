@@ -3,6 +3,8 @@ const app = require('./server/app')
 const PORT = process.env.PORT || 3001
 
 if ( process.env.NODE_ENV === 'production') {
+    const enforce = require('express-sslify')
+    const path = require('path')
     app.use(enforce.HTTPS({ trustProtoHeader: true}))
     app.use(express.static(path.join(__dirname, 'client/build')))
     app.get('*', function(req, res) {
