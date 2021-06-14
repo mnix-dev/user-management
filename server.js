@@ -1,6 +1,14 @@
-const ExpressError = require('./utils/ExpressError')
-const app = require('./app')
+const ExpressError = require('./server/utils/ExpressError')
+const app = require('./server/app')
 const PORT = process.env.PORT || 3001
+
+if ( process.env.NODE_ENV === 'production') {
+    app.use(enforce.HTTPS({ trustProtoHeader: true}))
+    app.use(express.static(path.join(__dirname, 'client/build')))
+    app.get('*', function(req, res) {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
+    })
+}
 
 app.get('/', (req, res) => res.render('home'));
 
